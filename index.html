@@ -1,28 +1,65 @@
 <html>
 <head>
-	<title>Lab 5</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-		 integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
-		 crossorigin=""/>
-	 <!-- this is the css for leaflet-routing-machine -->
-	 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-	 <!-- loading in the css for leaflet-control-geocoder -->
-	 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-	 <!-- inputing the leaflet js (1.9.2) -->
-	 <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
-		 integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
-		 crossorigin=""></script>
-	 <!-- script for leaflet-routing-machine -->
-	 <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-	 <!-- loading in the js for leaflet-control-geocoder -->
-	 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <meta charset=utf-8 />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    <title>Leaflet Compare</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+   <link rel="stylesheet" href="dist/leaflet-compare.css" />
+    <script src="dist/leaflet-compare.js"></script>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+    </style>
 </head>
-<body>
-	<div id="map"></div>
-    <script src="scripts.js">
-    </script>
 
+<body>
+    <div id='map'></div>
+
+    <script>
+    const map = L.map('map').setView([51.505, -0.09], 13);
+
+    const osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
+    }).addTo(map);
+
+    const stamenLayer = L.tileLayer('//stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', {
+        attribution:
+            'Map tiles by <a href="http://stamen.com">Stamen Design<\/a>, ' +
+            '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0<\/a> &mdash; ' +
+            'Map data {attribution.OpenStreetMap}',
+        minZoom: 1,
+        maxZoom: 16
+    }).addTo(map)
+
+    map.createPane("left")
+    map.createPane("right")
+
+    const leftCircle = L.circle([51.505, -0.09], {
+        pane: "left",
+        radius: 1000,
+        color: "#ff0000"
+    }).addTo(map);
+
+    const rightCircle = L.circle([51.505, -0.09], {
+        pane: "right",
+        radius: 1000,
+        color: "#0000ff"
+    }).addTo(map);
+
+    const compare = L.control.compare([leftCircle, stamenLayer], [rightCircle, osmLayer]).addTo(map);
+    </script>
 </body>
 </html>
