@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset=utf-8 />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    <title>Sea level rise</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+   <link rel="stylesheet" href="https://unpkg.com/leaflet-compare/dist/leaflet-compare.css" />
+    <script src="https://unpkg.com/leaflet-compare/dist/leaflet-compare.js"></script>
+
+
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+
+    <script>
+    const map = L.map('map').setView([21.756,89.59], 13);
+
+    const osmLayer = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+
+    const stamenLayer = L.tileLayer('http://{s}.google.com/vt?lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map)
+
+    map.createPane("left")
+    map.createPane("right")
+
+    const leftCircle = L.circle([21.756,89.59], {
+        pane: "left",
+        radius: 1000,
+        color: "#ff0000"
+    }).addTo(map);
+
+    const rightCircle = L.circle([21.756,89.59], {
+        pane: "right",
+        radius: 1000,
+        color: "#0000ff"
+    }).addTo(map);
+
+    const compare = L.control.compare([leftCircle, stamenLayer], [rightCircle, osmLayer]).addTo(map);
+    </script>
+</body>
+</html>
